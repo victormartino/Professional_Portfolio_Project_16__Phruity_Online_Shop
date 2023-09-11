@@ -1,0 +1,49 @@
+{% include "header.html" %}
+
+<style>
+h2 {
+  font-size: 40px !important;
+  margin-bottom: 30px;
+}
+
+h3 {
+  font-size: 22px !important;
+}
+
+.post-preview {
+  margin-left: 20px !important;
+}
+
+.masthead {
+  height: 30% !important;
+}
+p {
+   font-size: 14px !important;
+}
+.price {
+   font-size: 20px !important;
+}
+
+</style>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="row mb-3 text-center">
+            {% for product in products: %}
+                <div class="col-4 mb-3 d-flex justify-content-center">
+                    <div class="card h-100 mb-4 rounded-3 shadow-sm custom-card text-bg-dark">
+                        <img src="{{ product.product_img }}">
+                        <div class="card-body my-0 d-flex flex-column">
+                            <h5 class="mt-0 mb-2 fw-normal">{{ product.product_name.title() }}</h5>
+                            <p class="text-left my-0">{{ product.product_description }}</p>
+                            <p class="text-right mt-auto my-0 price"><b>${{ product.product_price }}</b></p>
+                            <a href="{{ url_for('add_fruit', product_id=product.id) }}" class="mt-2 w-100 align-items-end"><button type="button" class="mt-auto w-100 py-2 btn btn-lg btn-outline-warning">Add to bag</button></a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+        </div>
+  </div>
+  <hr>
+
+{% include "footer.html" %}

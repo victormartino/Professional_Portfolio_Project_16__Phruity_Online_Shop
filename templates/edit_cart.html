@@ -1,0 +1,92 @@
+{% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block content %}
+{% include "header.html" %}
+
+<style>
+.task-name {
+margin-left: 25px; /* Adjust as needed */
+}
+
+.post-preview {
+  margin-bottom: 20px !important;
+  margin-top: 10px !important;
+}
+
+.remove-button {
+  font-size: 14px !important;
+}
+
+.item-price {
+  font-size: 14px !important;
+  color: #A9A9A9 !important;
+}
+
+</style>
+
+  <!-- Main Content -->
+<div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="row justify-content-between post-preview">
+          <div class="col-md-6 col-12">
+            <h2 class="post-title">
+              My Shopping Bag
+            </h2>
+          </div>
+          <div class="col-sm-6 col-12 text-center">
+          {% if not current_user.is_authenticated %}
+            <div class="clearfix">
+                <a class="btn btn-primary float-lg-right float-left mt-0 mb-1" href="{{ url_for('register') }}">Register to save items</a>
+            </div>
+          {% endif %}
+          </div>
+          </div>
+        {% if cart_items: %}
+          {% for item in cart_items: %}
+                <div id="scroll-container" class="list-group">
+                  <div class="list-group-item">
+                    <div class="row">
+                      <div class="col-md-9 col-8 form-check d-flex align-items-center justify-content-between">
+                        <span class="task-name">{{ item.CartItem.selected_product.product_name.title() }}</span>
+                        <span class="item-price">(${{ item.CartItem.selected_product.product_price}} )</span>
+                      </div>
+                      <div class="col-md-3 col-4 remove-button d-flex align-items-center justify-content-end">
+                        <a href="{{ url_for('remove_product', product_id=item.CartItem.product_id) }}" onclick="saveScrollPosition('scroll-container')" class="mt-2 w-100 align-items-end"><button type="button" class="mx-0 px-2 py-2 btn btn-lg btn-warning btn-block">-</button></a>
+                        <span class="w-100 text-center"><b>{{ item.CartItem.amount }}</b></span>
+                        <a href="{{ url_for('add_one', product_id=item.CartItem.product_id) }}" onclick="saveScrollPosition('scroll-container')" class="mt-2 w-100 align-items-end"><button type="button" class="mx-0 px-2 py-2 btn btn-lg btn-warning btn-block">+</button></a>
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+          {% endfor %}
+          <div class="row justify-content-end mx-auto mt-4">
+            <span><b>Total</b>: ${{total}}</span>
+          </div>
+        {% endif %}
+        <div class="row justify-content-between">
+          <div class="col-6">
+          <div class="clearfix mt-4 mb-1 text-left">
+                  <a href="{{ url_for('home') }}" class="btn btn-primary float-left mt-1">Keep shopping</a>
+            </div>
+            </div>
+          <div class="col-6 text-right">
+        <div class="clearfix mt-4 mb-1">
+                <form action="/create-checkout-session" method="POST">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button class="btn btn-primary float-right mt-1" type="submit">Checkout</button>
+                  </form>
+            </div>
+            </div>
+          </div>
+    </div>
+  </div>
+</div>
+<hr>
+<a name="bottom"></a>
+
+{% include "footer.html" %}
+{% endblock %}
+
+
+
